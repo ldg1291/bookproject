@@ -1,4 +1,4 @@
-package com.donggyo.booksearch.controller;
+package com.donggyo.booksearch.controller.view;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HelloController {
 
-	@RequestMapping("hello")
+	@RequestMapping("/hello")
 	public String hello() {
 		return "hello_world";
 	}

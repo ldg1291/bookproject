@@ -1,4 +1,4 @@
-package com.donggyo.booksearch.controller;
+package com.donggyo.booksearch.controller.api;
 
 import com.donggyo.booksearch.dto.bookinfo.BookInfoDto;
 import com.donggyo.booksearch.dto.page.PagedObjectDto;
@@ -15,7 +15,7 @@ public class BookInfoController {
 	@Autowired
 	private BookSearchAggregateService bookSearchAggregateService;
 
-	@GetMapping("/search")
+	@GetMapping("/api/book/search")
 	@ResponseBody
 	public PagedObjectDto<BookInfoDto> getBook(@RequestParam(required = true)String query, @RequestParam(required = false) String sort, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size, @RequestParam(required = false) String target) {
 		return bookSearchAggregateService.searchBookInfo(query, sort, page, size, target);

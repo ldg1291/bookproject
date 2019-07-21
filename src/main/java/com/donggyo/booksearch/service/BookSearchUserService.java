@@ -48,7 +48,7 @@ public class BookSearchUserService {
 
 		LocalDateTime nowDate = LocalDateTime.now();
 
-		return new BookSearchUser(requestDto.getUserId(), requestDto.getPassword(), nowDate, nowDate);
+		return bookSearchUserRepository.save(new BookSearchUser(requestDto.getUserId(), requestDto.getPassword(), nowDate, nowDate));
 	}
 
 	private BookSearchUserDto tranformFrom(BookSearchUser bookSearchUser) {

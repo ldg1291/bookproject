@@ -1,4 +1,4 @@
-package com.donggyo.booksearch.controller;
+package com.donggyo.booksearch.controller.api;
 
 import com.donggyo.booksearch.entity.KeywordSearchRate;
 import com.donggyo.booksearch.service.KeywordSearchRateService;
@@ -15,7 +15,7 @@ public class PopularKeywordController {
 	@Autowired
 	private KeywordSearchRateService keywordSearchRateService;
 
-	@GetMapping("/popular-keywords")
+	@GetMapping("/api/book/popular-keywords")
 	@ResponseBody
 	public List<KeywordSearchRate> mostPopularKeywords() {
 		return keywordSearchRateService.getTop10MostSearchedKeywords();
