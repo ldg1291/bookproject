@@ -27,4 +27,21 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	compile 'org.springframework.boot:spring-boot-starter-web'
+	compile 'org.springframework.boot:spring-boot-starter-data-jpa:1.5.6.RELEASE'
+	compile 'org.xerial:sqlite-jdbc:3.25.2'
+	compile 'com.querydsl:querydsl-jpa:4.0.3'
+	compile 'com.querydsl:querydsl-core:4.0.3'
+	compile 'com.querydsl:querydsl-apt:4.0.3'
+	compile 'com.enigmabridge:hibernate4-sqlite-dialect:0.1.2'
+	compile 'org.springframework.boot:spring-boot-starter-data-redis'
+	compile 'redis.clients:jedis:2.9.0'
+
+	testImplementation('org.spockframework:spock-core:1.1-groovy-2.4-rc-2')
+	testImplementation('org.spockframework:spock-spring:1.1-groovy-2.4-rc-2')
+	testImplementation('cglib:cglib-nodep:2.2')
+	testCompile(
+			'org.spockframework:spock-core:1.0-groovy-2.4'
+	)
 }
