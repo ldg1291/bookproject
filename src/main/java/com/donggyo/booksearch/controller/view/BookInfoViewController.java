@@ -8,6 +8,6 @@ public class BookInfoViewController {
 
 	@RequestMapping("/books")
 	public String bookPage() {
-		return "/search_view";
+		return "/main_view";
 	}
 }

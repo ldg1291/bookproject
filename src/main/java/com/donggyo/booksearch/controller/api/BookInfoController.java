@@ -1,5 +1,6 @@
 package com.donggyo.booksearch.controller.api;
 
+import com.donggyo.booksearch.dto.ResponseDto;
 import com.donggyo.booksearch.dto.bookinfo.BookInfoDto;
 import com.donggyo.booksearch.dto.page.PagedObjectDto;
 import com.donggyo.booksearch.enums.SearchType;
@@ -19,7 +20,7 @@ public class BookInfoController {
 
 	@GetMapping("/api/book/search")
 	@ResponseBody
-	public PagedObjectDto<BookInfoDto> getBook(@RequestParam(required = true)String query, @RequestParam(required = false) SortType sort, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size, @RequestParam(required = false) SearchType target) {
+	public ResponseDto<PagedObjectDto<BookInfoDto>> getBook(@RequestParam(required = true)String query, @RequestParam(required = false) SortType sort, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size, @RequestParam(required = false) SearchType target) {
 		return bookSearchAggregateService.searchBookInfo(query, sort, page, size, target);
 	}
 }

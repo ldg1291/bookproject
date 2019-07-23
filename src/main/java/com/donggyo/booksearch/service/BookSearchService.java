@@ -8,6 +8,7 @@ import com.donggyo.booksearch.dto.page.PagedObjectDto;
 import com.donggyo.booksearch.dto.page.Pagination;
 import com.donggyo.booksearch.enums.SearchType;
 import com.donggyo.booksearch.enums.SortType;
+import com.donggyo.booksearch.exception.BookSearchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ public class BookSearchService {
 	@Autowired
 	private BookSearchExternalApiAdapter bookSearchExternalApiAdapter;
 
-	PagedObjectDto<BookInfoDto> searchBookByQuery(String query, SortType sort, Integer page, Integer size, SearchType target) {
+	PagedObjectDto<BookInfoDto> searchBookByQuery(String query, SortType sort, Integer page, Integer size, SearchType target) throws
+		BookSearchException {
 
 		BookSearchResultDto bookSearchResultDto = bookSearchExternalApiAdapter.getBook(query, sort, page, size, target);
 

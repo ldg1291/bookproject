@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" />
+<head>
+  <meta charset="UTF-8">
+  <title>Search_View</title>
+
+  <style>
+    button {
+      border-radius: 4px;
+      background-color: #4CAF50;
+      color: #FFFFFF;
+    }
+
+    button.logout-button {
+      background-color: #FF0000;
+    }
+
+    button.search-button {
+      background-color: #008CBA;
+    }
+
+    div.user-div {
+      float: right;
+      margin-top: 10px;
+      margin-right: 10px;
+      display: block;
+    }
+
+    div.result-table-div {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+
+    div.page-button-div {
+      display: table;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 10px;
+    }
+
+    button.page-button {
+      border-radius: 0px;
+      background-color: gainsboro;
+      color: #000;
+    }
+
+    button.active-page {
+      border-radius: 0px;
+      color: #008CBA;
+    }
+
+    div.search-condition-div {
+      float: left;
+      margin-top: 50px;
+      margin-left: 10px;
+      margin-bottom: 10px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<div class="user-div" th:if="${session.userId}">
+  <span th:text="'Hi ' + ${session.userId} + '!!'"></span>
+  <button class="popular-button">Popular Search Words</button>
+  <button class="history-button">Search History</button>
+  <button class="logout-button">Log-Out</button>
+</div>
+<div>
+  <div class="search-condition-div">
+    <div>
+      <label>query : </label>
+      <input type="text" id="query-text">
+      <label>sort : </label>
+      <select id="sort-select">
+        <option value="ACCURACY">정확도순</option>
+        <option value="LATEST">최신순</option>
+      </select>
+      <label>target : </label>
+      <select id="target-select">
+        <option value="NONE">지정 안함</option>
+        <option value="TITLE">제목 검색</option>
+        <option value="ISBN">ISBN 검색</option>
+        <option value="PUBLISHER">출판사 검색</option>
+        <option value="PERSON">인명 검색</option>
+      </select>
+      <label>size : </label>
+      <input type="number" id="size-text" value="10">
+      <button class="search-button" onclick="searchBook(1)">Search</button>
+    </div>
+  </div>
+  <div class="result-div" id="result-div">
+
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script>
+
+  var resultHtml = "";
+  var detailHtml = "";
+  var popularKeywordHtml = "";
+  var historyHtml = "";
+
+  function searchBook(page) {
+
+    $("#result-table-div").remove();
+    $("#page-button-div").remove();
+
+    $.ajax({
+      url: "/api/book/search",
+      type: "GET",
+      data: {
+        query: document.getElementById("query-text").value,
+        sort: document.getElementById("sort-select").value,
+        target: document.getElementById("target-select").value,
+        page: page,
+        size: document.getElementById("size-text").value
+      },
+      success: function (data) {
+        if (data.success === false) {
+          alert(data.message)
+        } else {
+          if (data.data.result.size !== 0) {
+            var searchResult = data.data;
+
+            resultHtml =
+              "<div class='result-table-div' id='result-table-div'><table class=\"table table-bordered\" id=\"book-search-result\">" +
+              "<thead>" +
+              "<tr>" +
+              "<th>제목</th>" +
+              "<th>출판사</th>" +
+              "<th>저자</th>" +
+              "<th>가격</th>" +
+              "<th>상세보기</th>" +
+              "</tr>" +
+              "</thead>";
+            resultHtml += "<tbody>"
+
+            searchResult.result.forEach(function (element) {
+              resultHtml += "<tr>";
+              resultHtml += "<td><span>" + element.title + "</span></td>";
+              resultHtml += "<td><span>" + element.publisher + "</span></td>";
+              resultHtml += "<td><span>" + element.authors + "</span></td>";
+              resultHtml += "<td><span>" + element.price + "</span></td>";
+              resultHtml += "<td><button onclick='openDetails("+element+")'>상세보기</button></td>"
+            });
+            resultHtml += "</tbody></table></div>";
+
+            var pageInfo = searchResult.pagination;
+
+            resultHtml += "<div id='page-button-div' class='page-button-div'>";
+            for (var i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
+              if (i !== 1 && i === pageInfo.startPage) {
+                var prev = i - 1;
+                resultHtml += "<button class='page-button' onclick='searchBook(" + prev + ")'>" + "<-" + "</button>";
+              }
+              if (i === pageInfo.page) {
+                resultHtml += "<button class='page-button active-page' onclick='searchBook(" + i + ")'>" + i + "</button>";
+              } else {
+                resultHtml += "<button class='page-button' onclick='searchBook(" + i + ")'>" + i + "</button>";
+              }
+              if (i !== pageInfo.totalPages && i === pageInfo.endPage) {
+                var next = i + 1;
+                resultHtml += "<button class='page-button' onclick='searchBook(" + next + ")'>" + "->" + "</button>";
+              }
+            }
+
+            resultHtml += "</div>"
+
+            $("#result-div").append(resultHtml);
+          }
+        }
+      },
+      error: function (jqXHR) {
+        alert("검색 오류 : " + jqXHR.status + jqXHR.statusText);
+      }
+    });
+  }
+
+  function openDetails(element) {
+    $.ajax()
+  }
+</script>
+</body>
+</html>
