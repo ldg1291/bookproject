@@ -1,6 +1,8 @@
 package com.donggyo.booksearch.adapter;
 
 import com.donggyo.booksearch.dto.bookinfo.BookSearchResultDto;
+import com.donggyo.booksearch.enums.SearchType;
+import com.donggyo.booksearch.enums.SortType;
 import com.donggyo.booksearch.exception.BookSearchException;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
@@ -34,8 +36,8 @@ public class BookSearchExternalApiAdapter {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public BookSearchResultDto getBook(String query, String sort, Integer page, Integer size, String target) {
-		String queryParam = queryBuilder(query, sort, page, size, target);
+	public BookSearchResultDto getBook(String query, SortType sort, Integer page, Integer size, SearchType target) {
+		String queryParam = queryBuilder(query, sort.getKakaoDesc(), page, size, target.getKakaoDesc());
 		HttpEntity<Map<String, String>> header = makeHttpEntity();
 
 		ResponseEntity responseEntity;
