@@ -31,9 +31,13 @@ public class BookSearchUserService {
 		return new ResponseDto<>(newUserDto);
 	}
 
-	public boolean logInWithUser(BookSearchUserRequestDto requestDto) {
+	public ResponseDto<Boolean> logInWithUser(BookSearchUserRequestDto requestDto) {
 
-		return checkIfUserExistsWithUserIdAndPassword(requestDto);
+		if(checkIfUserExistsWithUserIdAndPassword(requestDto)) {
+			return new ResponseDto<>(Boolean.TRUE);
+		}
+
+		return ResponseDto.failResponseOf(WRONG_LOG_IN_DATA);
 	}
 
 	private boolean checkIfUserExistsWithUserId(String userId) {

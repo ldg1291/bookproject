@@ -11,4 +11,9 @@ public class BookSearchUserRequestDto implements Serializable {
 
 	private String userId;
 	private String password;
+
+	public BookSearchUserRequestDto(String userId, String password) {
+		this.userId = userId;
+		this.password = password;
+	}
 }

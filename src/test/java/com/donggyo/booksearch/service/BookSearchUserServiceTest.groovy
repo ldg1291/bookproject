@@ -1,8 +1,11 @@
 package com.donggyo.booksearch.service
 
 import com.donggyo.booksearch.dto.BookSearchUserRequestDto
+import com.donggyo.booksearch.entity.BookSearchUser
 import com.donggyo.booksearch.repository.BookSearchUserRepository
 import spock.lang.Specification
+
+import java.time.LocalDateTime
 
 class BookSearchUserServiceTest extends Specification {
 
@@ -18,7 +21,7 @@ class BookSearchUserServiceTest extends Specification {
 		sut = new BookSearchUserService(bookSearchUserRepository: bookSearchUserRepository)
 	}
 
-	def "create new user fails when the user put existing value for userId" () {
+	def "create new user fails when the user put existing value for userId"() {
 		given:
 		bookSearchUserRepository.existsByUserId("existing_id") >> true
 
@@ -35,6 +38,7 @@ class BookSearchUserServiceTest extends Specification {
 
 		given:
 		bookSearchUserRepository.existsByUserId("not_existing_id") >> false
+		bookSearchUserRepository.save(_) >> new BookSearchUser(userId: "not_existing_id", createdAt: LocalDateTime.now(), modifiedAt: LocalDateTime.now())
 
 		when:
 		def res = sut.createUser(new BookSearchUserRequestDto(userId: "not_existing_id", password: "password"))
@@ -53,9 +57,8 @@ class BookSearchUserServiceTest extends Specification {
 		def res = sut.logInWithUser(new BookSearchUserRequestDto(userId: "not_existing_id", password: "password"))
 
 		then:
-		res == false
+		res.isSuccess() == false
 	}
-
 
 
 	def "create new user fails when the user put wrong userId and password"() {
@@ -66,6 +69,6 @@ class BookSearchUserServiceTest extends Specification {
 		def res = sut.logInWithUser(new BookSearchUserRequestDto(userId: "existing_id", password: "password"))
 
 		then:
-		res == true
+		res.isSuccess() == true
 	}
 }

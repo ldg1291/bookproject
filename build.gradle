@@ -37,6 +37,7 @@ dependencies {
 	compile 'com.enigmabridge:hibernate4-sqlite-dialect:0.1.2'
 	compile 'org.springframework.boot:spring-boot-starter-data-redis'
 	compile 'redis.clients:jedis:2.9.0'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.5.4'
 
 	testImplementation('org.spockframework:spock-core:1.1-groovy-2.4-rc-2')
 	testImplementation('org.spockframework:spock-spring:1.1-groovy-2.4-rc-2')

@@ -7,9 +7,7 @@ import com.donggyo.booksearch.service.BookSearchUserService;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -28,15 +26,28 @@ public class BookSearchUserController {
 		return bookSearchUserService.createUser(requestDto);
 	}
 
-	@PostMapping("/api/user/login")
+	@RequestMapping(value = "/api/accounts/login", method = RequestMethod.GET)
 	@ResponseBody
-	public boolean logInUser(@RequestBody BookSearchUserRequestDto requestDto, HttpServletRequest request) {
+	public ResponseDto<Boolean> logInUser(HttpServletRequest request) {
 
-		if(bookSearchUserService.logInWithUser(requestDto)) {
+		BookSearchUserRequestDto bookSearchUserRequestDto = new BookSearchUserRequestDto(request.getParameter("userId"), request.getParameter("password"));
+
+		ResponseDto<Boolean> logInResult = bookSearchUserService.logInWithUser(bookSearchUserRequestDto);
+
+		if(logInResult.isSuccess()) {
 			HttpSession session = request.getSession();
-			session.setAttribute("userId", requestDto.getUserId());
+			session.setAttribute("userId", bookSearchUserRequestDto.getUserId());
 		}
 
-		return bookSearchUserService.logInWithUser(requestDto);
+		return logInResult;
+	}
+
+	@RequestMapping(value = "/api/accounts/logout", method = RequestMethod.GET)
+	public String logOutUser(HttpServletRequest request) {
+
+		HttpSession session = request.getSession();
+		session.removeAttribute("userId");
+
+		return "account_view";
 	}
 }
