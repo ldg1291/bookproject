@@ -18,3 +18,10 @@ kakao:
     search:
       url: https://dapi.kakao.com/v3/search/book?
     key: 0779d5105f601e50f63fd8b1efc55eec
+
+naver:
+  api:
+    search:
+      url: https://openapi.naver.com/v1/search/book.json?
+    key: rr0IaHNLAJiph9geFCPC
+    password: qW6HOpuQOC

@@ -1,7 +1,7 @@
 package com.donggyo.booksearch.controller.api;
 
 import com.donggyo.booksearch.dto.ResponseDto;
-import com.donggyo.booksearch.dto.bookinfo.BookInfoDto;
+import com.donggyo.booksearch.dto.bookinfo.kakao.BookInfoDto;
 import com.donggyo.booksearch.dto.page.PagedObjectDto;
 import com.donggyo.booksearch.enums.SearchType;
 import com.donggyo.booksearch.enums.SortType;

@@ -1,8 +1,8 @@
 package com.donggyo.booksearch.service;
 
 import com.donggyo.booksearch.adapter.BookSearchExternalApiAdapter;
-import com.donggyo.booksearch.dto.bookinfo.BookInfoDto;
-import com.donggyo.booksearch.dto.bookinfo.BookInfoMeta;
+import com.donggyo.booksearch.dto.bookinfo.kakao.BookInfoDto;
+import com.donggyo.booksearch.dto.bookinfo.kakao.BookInfoMeta;
 import com.donggyo.booksearch.dto.bookinfo.BookSearchResultDto;
 import com.donggyo.booksearch.dto.page.PagedObjectDto;
 import com.donggyo.booksearch.dto.page.Pagination;

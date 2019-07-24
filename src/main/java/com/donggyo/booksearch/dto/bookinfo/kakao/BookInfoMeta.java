@@ -1,4 +1,4 @@
-package com.donggyo.booksearch.dto.bookinfo;
+package com.donggyo.booksearch.dto.bookinfo.kakao;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

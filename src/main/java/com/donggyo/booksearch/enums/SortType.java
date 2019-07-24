@@ -15,4 +15,10 @@ public enum SortType {
 		this.naverDesc = naverDesc;
 	}
 
+	public static String getDescByEnumAndCompany (SearchCompanyType companyType, SortType type) {
+		if(companyType == SearchCompanyType.NAVER) {
+			return type.getNaverDesc();
+		}
+		return type.getKakaoDesc();
+	}
 }

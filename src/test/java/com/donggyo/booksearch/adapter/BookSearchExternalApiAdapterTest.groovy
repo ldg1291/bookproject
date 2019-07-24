@@ -1,7 +1,9 @@
 package com.donggyo.booksearch.adapter
 
-import com.donggyo.booksearch.dto.bookinfo.BookInfoMeta
+import com.donggyo.booksearch.dto.bookinfo.kakao.BookInfoMeta
 import com.donggyo.booksearch.dto.bookinfo.BookSearchResultDto
+import com.donggyo.booksearch.dto.bookinfo.naver.NaverBookInfoMeta
+import com.donggyo.booksearch.dto.bookinfo.naver.NaverBookSearchResultDto
 import com.donggyo.booksearch.enums.SearchType
 import com.donggyo.booksearch.enums.SortType
 import com.donggyo.booksearch.exception.BookSearchException
@@ -37,32 +39,5 @@ class BookSearchExternalApiAdapterTest extends Specification {
 		res.meta.total_count == 0
 		res.meta.is_end
 
-	}
-
-	def "kakao api call throws RestClientException"() {
-		given:
-		restTemplate.exchange(_, _ as HttpMethod, _ as HttpEntity<?>, BookSearchResultDto.class) >> {throw new RestClientException("message") }
-
-		when:
-		sut.getBook("query", SortType.ACCURACY,2,3, SearchType.ISBN)
-
-		then:
-		thrown BookSearchException
-
-	}
-
-	@Unroll
-	def "kakao api call with no 200 code"() {
-		given:
-		restTemplate.exchange(_, _ as HttpMethod, _ as HttpEntity<?>, BookSearchResultDto.class) >> new ResponseEntity<BookSearchResultDto>(null, HTTP_STATUS)
-
-		when:
-		def result = sut.getBook("query", SortType.ACCURACY,2,3, SearchType.ISBN)
-
-		then:
-		result == null
-
-		where:
-		HTTP_STATUS << [HttpStatus.BAD_REQUEST, HttpStatus.GATEWAY_TIMEOUT, HttpStatus.INTERNAL_SERVER_ERROR]
 	}
 }
