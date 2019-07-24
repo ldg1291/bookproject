@@ -8,6 +8,8 @@ import com.donggyo.booksearch.enums.SortType;
 import com.donggyo.booksearch.exception.BookSearchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BookSearchAggregateService {
@@ -19,7 +21,9 @@ public class BookSearchAggregateService {
 	@Autowired
 	private KeywordSearchRateService keywordSearchRateService;
 
-	public ResponseDto<PagedObjectDto<BookInfoDto>> searchBookInfo(String query, SortType sort, Integer page, Integer size, SearchType target, String userId) {
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+	public ResponseDto<PagedObjectDto<BookInfoDto>> searchBookInfo(String query, SortType sort, Integer page, Integer size, SearchType target,
+		String userId) {
 
 		try {
 			PagedObjectDto<BookInfoDto> pagedBookInfoDto = bookSearchService.searchBookByQuery(query, sort, page, size, target);

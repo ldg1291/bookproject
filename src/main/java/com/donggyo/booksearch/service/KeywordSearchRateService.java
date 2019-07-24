@@ -24,9 +24,9 @@ public class KeywordSearchRateService {
 
 		if (keywordSearchRate != null) {
 			keywordSearchRateRepository.save(
-				new KeywordSearchRate(keywordSearchRate.getKeywordSearchRateId(), keyword, keywordSearchRate.getSearchNumber() + 1));
+				new KeywordSearchRate(keyword, keywordSearchRate.getSearchNumber() + 1));
 		} else {
-			keywordSearchRateRepository.save(new KeywordSearchRate(UUID.randomUUID().toString() + "_" + keyword, keyword, FIRST_SEARCH));
+			keywordSearchRateRepository.save(new KeywordSearchRate(keyword, FIRST_SEARCH));
 		}
 	}
 

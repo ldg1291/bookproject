@@ -16,17 +16,13 @@ import java.time.LocalDateTime;
 public class KeywordSearchRate {
 
 	@Id
-	@Column(name = "keyword_search_rate_id", nullable = false)
-	private String keywordSearchRateId;
-
 	@Column(name = "keyword", nullable = false)
 	private String keyword;
 
 	@Column(name = "search_number", nullable = false)
 	private Long searchNumber;
 
-	public KeywordSearchRate(String keywordSearchRateId, String keyword, Long searchNumber) {
-		this.keywordSearchRateId = keywordSearchRateId;
+	public KeywordSearchRate(String keyword, Long searchNumber) {
 		this.keyword = keyword;
 		this.searchNumber = searchNumber;
 	}
