@@ -19,19 +19,23 @@ import java.time.LocalDateTime;
 public class BookSearchUser implements Serializable {
 
 	@Id
-	@Column(name = "user_id")
+	@Column(name = "book_search_user_id")
+	private String bookSearchUserId;
+
+	@Column(name = "user_id", nullable = false)
 	private String userId;
 
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(name = "created_at")
+	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 
-	@Column(name = "modified_at")
+	@Column(name = "modified_at", nullable = false)
 	private LocalDateTime modifiedAt;
 
-	public BookSearchUser(String userId, String password, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+	public BookSearchUser(String bookSearchUserId, String userId, String password, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+		this.bookSearchUserId = bookSearchUserId;
 		this.userId = userId;
 		this.password = password;
 		this.createdAt = createdAt;

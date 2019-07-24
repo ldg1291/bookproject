@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,8 +25,8 @@ public class BookSearchHistoryService {
 		return new ResponseDto(bookSearchHistoryDtos);
 	}
 
-	BookSearchHistory save(BookSearchHistory history) {
-		return bookSearchHistoryRepository.save(history);
+	BookSearchHistory save(String userId, String query) {
+		return bookSearchHistoryRepository.save(makeBookSearchHistory(userId, query));
 	}
 
 	private List<BookSearchHistory> findAllOrderBySearchDate(String userId) {
@@ -34,5 +35,9 @@ public class BookSearchHistoryService {
 
 	private BookSearchHistoryDto transformTo(BookSearchHistory bookSearchHistory) {
 		return new BookSearchHistoryDto(bookSearchHistory.getUserId(), bookSearchHistory.getKeyword(), bookSearchHistory.getSearchDate());
+	}
+
+	private BookSearchHistory makeBookSearchHistory (String userId, String query) {
+		return new BookSearchHistory(UUID.randomUUID().toString()+"_"+userId+"_"+query, userId, query);
 	}
 }

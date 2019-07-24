@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class BookSearchUserService {
@@ -53,7 +54,9 @@ public class BookSearchUserService {
 
 		LocalDateTime nowDate = LocalDateTime.now();
 
-		return bookSearchUserRepository.save(new BookSearchUser(requestDto.getUserId(), requestDto.getPassword(), nowDate, nowDate));
+		String bookSearchUserId = UUID.randomUUID().toString()+"_"+requestDto.getUserId();
+
+		return bookSearchUserRepository.save(new BookSearchUser(bookSearchUserId, requestDto.getUserId(), requestDto.getPassword(), nowDate, nowDate));
 	}
 
 	private BookSearchUserDto tranformFrom(BookSearchUser bookSearchUser) {

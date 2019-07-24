@@ -1,7 +1,7 @@
 package com.donggyo.booksearch.controller.api;
 
+import com.donggyo.booksearch.dto.KeywordSearchRateDto;
 import com.donggyo.booksearch.dto.ResponseDto;
-import com.donggyo.booksearch.entity.KeywordSearchRate;
 import com.donggyo.booksearch.service.KeywordSearchRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ public class PopularKeywordController {
 
 	@GetMapping("/api/book/popular-keywords")
 	@ResponseBody
-	public ResponseDto<List<KeywordSearchRate>> mostPopularKeywords() {
+	public ResponseDto<List<KeywordSearchRateDto>> mostPopularKeywords() {
 		return keywordSearchRateService.getTop10MostSearchedKeywords();
 	}
 }

@@ -17,7 +17,7 @@ public class BookSearchHistory {
 
 	@Id
 	@Column(name = "book_search_history_id")
-	private Long bookSearchHistoryId;
+	private String bookSearchHistoryId;
 
 	@Column(name = "user_id")
 	private String userId;
@@ -28,7 +28,7 @@ public class BookSearchHistory {
 	@Column(name = "search_date")
 	private LocalDateTime searchDate;
 
-	public BookSearchHistory(Long bookSearchHistoryId, String userId, String keyword) {
+	public BookSearchHistory(String bookSearchHistoryId, String userId, String keyword) {
 		this.bookSearchHistoryId = bookSearchHistoryId;
 		this.userId = userId;
 		this.keyword = keyword;

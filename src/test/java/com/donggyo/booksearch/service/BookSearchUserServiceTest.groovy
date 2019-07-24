@@ -38,7 +38,7 @@ class BookSearchUserServiceTest extends Specification {
 	def "create new user succeed when the validator not throws exception"() {
 
 		given:
-		bookSearchUserRepository.save(_) >> new BookSearchUser(userId: "not_existing_id", createdAt: LocalDateTime.now(), modifiedAt: LocalDateTime.now())
+		bookSearchUserRepository.save(_) >> new BookSearchUser(bookSearchUserId: "id", userId: "not_existing_id", createdAt: LocalDateTime.now(), modifiedAt: LocalDateTime.now())
 
 		when:
 		def res = sut.createUser(new BookSearchUserRequestDto(userId: "not_existing_id", password: "password"))

@@ -2,6 +2,8 @@ package com.donggyo.booksearch.adapter
 
 import com.donggyo.booksearch.dto.bookinfo.BookInfoMeta
 import com.donggyo.booksearch.dto.bookinfo.BookSearchResultDto
+import com.donggyo.booksearch.enums.SearchType
+import com.donggyo.booksearch.enums.SortType
 import com.donggyo.booksearch.exception.BookSearchException
 import org.assertj.core.util.Lists
 import org.springframework.http.HttpEntity
@@ -27,7 +29,7 @@ class BookSearchExternalApiAdapterTest extends Specification {
 		restTemplate.exchange(_,_,_, BookSearchResultDto.class) >> new ResponseEntity<BookSearchResultDto>(new BookSearchResultDto(documents: Lists.newArrayList(), meta:new BookInfoMeta(is_end: true, pageable_count: 0, total_count: 0)),HttpStatus.OK)
 
 		when:
-		def res = sut.getBook("query", "asc",2,3, "")
+		def res = sut.getBook("query", SortType.ACCURACY,2,3, SearchType.ISBN)
 
 		then:
 		res.documents.size() == 0
@@ -42,7 +44,7 @@ class BookSearchExternalApiAdapterTest extends Specification {
 		restTemplate.exchange(_, _ as HttpMethod, _ as HttpEntity<?>, BookSearchResultDto.class) >> {throw new RestClientException("message") }
 
 		when:
-		sut.getBook("query", "asc",2,3, "")
+		sut.getBook("query", SortType.ACCURACY,2,3, SearchType.ISBN)
 
 		then:
 		thrown BookSearchException
@@ -55,7 +57,7 @@ class BookSearchExternalApiAdapterTest extends Specification {
 		restTemplate.exchange(_, _ as HttpMethod, _ as HttpEntity<?>, BookSearchResultDto.class) >> new ResponseEntity<BookSearchResultDto>(null, HTTP_STATUS)
 
 		when:
-		def result = sut.getBook("query", "asc",2,3, "")
+		def result = sut.getBook("query", SortType.ACCURACY,2,3, SearchType.ISBN)
 
 		then:
 		result == null

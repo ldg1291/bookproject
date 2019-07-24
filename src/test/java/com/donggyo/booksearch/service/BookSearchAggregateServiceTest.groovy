@@ -22,10 +22,10 @@ class BookSearchAggregateServiceTest extends Specification {
 	def "for each view service there is one history save and one search"() {
 
 		when:
-		sut.searchBookInfo("q", SortType.ACCURACY, 1, 2, SearchType.ISBN)
+		sut.searchBookInfo("q", SortType.ACCURACY, 1, 2, SearchType.ISBN, "userId")
 
 		then:
-		1 * bookSearchHistoryService.save(_)
+		1 * bookSearchHistoryService.save("userId", "q")
 		1 * bookSearchService.searchBookByQuery("q", SortType.ACCURACY, 1, 2, SearchType.ISBN)
 		1 * keywordSearchRateService.saveOrUpdate(_)
 
