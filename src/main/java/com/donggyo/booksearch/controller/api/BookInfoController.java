@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class BookInfoController {
 
@@ -20,7 +22,10 @@ public class BookInfoController {
 
 	@GetMapping("/api/book/search")
 	@ResponseBody
-	public ResponseDto<PagedObjectDto<BookInfoDto>> getBook(@RequestParam(required = true)String query, @RequestParam(required = false) SortType sort, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size, @RequestParam(required = false) SearchType target) {
-		return bookSearchAggregateService.searchBookInfo(query, sort, page, size, target);
+	public ResponseDto<PagedObjectDto<BookInfoDto>> getBook(@RequestParam(required = true)String query, @RequestParam(required = false) SortType sort, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size, @RequestParam(required = false) SearchType target, HttpServletRequest request) {
+
+		String userId = (String)request.getSession().getAttribute("userId");
+
+		return bookSearchAggregateService.searchBookInfo(query, sort, page, size, target, userId);
 	}
 }

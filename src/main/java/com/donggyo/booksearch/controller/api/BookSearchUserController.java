@@ -43,11 +43,12 @@ public class BookSearchUserController {
 	}
 
 	@RequestMapping(value = "/api/accounts/logout", method = RequestMethod.GET)
-	public String logOutUser(HttpServletRequest request) {
+	@ResponseBody
+	public Boolean logOutUser(HttpServletRequest request) {
 
 		HttpSession session = request.getSession();
 		session.removeAttribute("userId");
 
-		return "account_view";
+		return true;
 	}
 }

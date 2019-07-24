@@ -1,6 +1,7 @@
 package com.donggyo.booksearch.service;
 
 import com.donggyo.booksearch.dto.BookSearchHistoryDto;
+import com.donggyo.booksearch.dto.ResponseDto;
 import com.donggyo.booksearch.entity.BookSearchHistory;
 import com.donggyo.booksearch.repository.BookSearchHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,20 @@ public class BookSearchHistoryService {
 	@Autowired
 	private BookSearchHistoryRepository bookSearchHistoryRepository;
 
-	public List<BookSearchHistoryDto> findRecentHistories (String userId) {
-		return findTop10ByUserIdOrderBySearchDateDesc(userId).stream().map(this::transformTo).collect(Collectors.toList());
+	public ResponseDto<List<BookSearchHistoryDto>> findRecentHistories (String userId) {
+
+		List<BookSearchHistoryDto> bookSearchHistoryDtos = findAllOrderBySearchDate(userId).stream().map(this::transformTo).collect(
+			Collectors.toList());
+
+		return new ResponseDto(bookSearchHistoryDtos);
 	}
 
 	BookSearchHistory save(BookSearchHistory history) {
 		return bookSearchHistoryRepository.save(history);
 	}
 
-	private List<BookSearchHistory> findTop10ByUserIdOrderBySearchDateDesc(String userId) {
-		return bookSearchHistoryRepository.findTop10ByUserIdOrderBySearchDateDesc(userId);
+	private List<BookSearchHistory> findAllOrderBySearchDate(String userId) {
+		return bookSearchHistoryRepository.findAllByUserIdOrderBySearchDateDesc(userId);
 	}
 
 	private BookSearchHistoryDto transformTo(BookSearchHistory bookSearchHistory) {

@@ -22,12 +22,12 @@ public class BookSearchAggregateService {
 	@Autowired
 	private KeywordSearchRateService keywordSearchRateService;
 
-	public ResponseDto<PagedObjectDto<BookInfoDto>> searchBookInfo(String query, SortType sort, Integer page, Integer size, SearchType target) {
+	public ResponseDto<PagedObjectDto<BookInfoDto>> searchBookInfo(String query, SortType sort, Integer page, Integer size, SearchType target, String userId) {
 
 		try {
 			PagedObjectDto<BookInfoDto> pagedBookInfoDto = bookSearchService.searchBookByQuery(query, sort, page, size, target);
 
-			bookSearchHistoryService.save(new BookSearchHistory(new Random().nextLong(), "userId", query));
+			bookSearchHistoryService.save(new BookSearchHistory(new Random().nextLong(), userId, query));
 			keywordSearchRateService.saveOrUpdate(query);
 
 			return new ResponseDto<>(pagedBookInfoDto);

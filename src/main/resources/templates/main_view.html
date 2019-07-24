@@ -8,6 +8,7 @@
   <title>Search_View</title>
 
   <style>
+
     button {
       border-radius: 4px;
       background-color: #4CAF50;
@@ -34,6 +35,31 @@
       margin-right: 10px;
     }
 
+    div.detail-div {
+      margin-left: 30px;
+      margin-right: 30px;
+    }
+
+    button.detail-button {
+      border-radius: 4px;
+      background-color: #008CBA;
+      color: #FFFFFF;
+    }
+
+    div.history-table-div {
+      margin-left: 50px;
+      margin-right: 50px;
+    }
+
+    div.popular-table-div{
+      margin-left: 50px;
+      margin-right: 50px;
+    }
+
+    div.detail-close-button {
+      float: right;
+    }
+
     div.page-button-div {
       display: table;
       margin-left: auto;
@@ -46,6 +72,13 @@
       background-color: gainsboro;
       color: #000;
     }
+
+    button.close-button {
+      background-color: gainsboro;
+      color: #000;
+    }
+
+
 
     button.active-page {
       border-radius: 0px;
@@ -64,9 +97,9 @@
 <body>
 <div class="user-div" th:if="${session.userId}">
   <span th:text="'Hi ' + ${session.userId} + '!!'"></span>
-  <button class="popular-button">Popular Search Words</button>
-  <button class="history-button">Search History</button>
-  <button class="logout-button">Log-Out</button>
+  <button class="popular-button" onclick="openPopular()">Popular Search Words</button>
+  <button class="history-button" th:onclick="openHistory()">Search History</button>
+  <button class="logout-button" onclick="logout()">Log-Out</button>
 </div>
 <div>
   <div class="search-condition-div">
@@ -100,15 +133,168 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script>
 
+  var elements;
+
   var resultHtml = "";
   var detailHtml = "";
   var popularKeywordHtml = "";
   var historyHtml = "";
 
+  function logout() {
+    $.ajax({
+      url: "/api/accounts/logout",
+      type: "GET",
+      success: function(data) {
+        if(data===true) {
+          window.location.href = "/account"
+        } else {
+          alert("log out failed due to system error");
+        }
+      },
+      error: function (jqXHR) {
+        alert("fail to log out : " + jqHR.status + jqXHR.message);
+      }
+    });
+  }
+
+  function openDetails(index) {
+
+    $("#result-table-div").remove();
+    $("#page-button-div").remove();
+    $("#detail-div").remove();
+    $("#popular-table-div").remove();
+    $("#history-table-div").remove();
+
+    detailHtml = "";
+
+    detailHtml += "<div class='detail-div' id='detail-div'><table class='table table-bordered'>";
+    detailHtml += "<tr><td><span>title</span></td><td><span>" + elements[index].title + "</span></td></tr>"
+    detailHtml += "<tr><td><span>contents</span></td><td><span>" + elements[index].contents + "</span></td></tr>"
+    detailHtml += "<tr><td><span>url</span></td><td><a href='" + elements[index].url + "'>book detail url</a></td></tr>"
+    detailHtml += "<tr><td><span>isbn</span></td><td><span>" + elements[index].isbn + "</span></td></tr>"
+    detailHtml += "<tr><td><span>datetime</span></td><td><span>" + elements[index].datetime + "</span></td></tr>"
+    detailHtml += "<tr><td><span>authors</span></td><td><span>" + elements[index].authors + "</span></td></tr>"
+    detailHtml += "<tr><td><span>publisher</span></td><td><span>" + elements[index].publisher + "</span></td></tr>"
+    detailHtml += "<tr><td><span>translators</span></td><td><span>" + elements[index].translators + "</span></td></tr>"
+    detailHtml += "<tr><td><span>price</span></td><td><span>" + elements[index].price + "</span></td></tr>"
+    detailHtml += "<tr><td><span>sale_price</span></td><td><span>" + elements[index].sale_price + "</span></td></tr>"
+    detailHtml += "<tr><td><span>thumbnail</span></td><td><img src='" + elements[index].thumbnail + "'></td></tr>"
+    detailHtml += "<tr><td><span>status</span></td><td><span>" + elements[index].status + "</span></td></tr>"
+    detailHtml += "</table>" +
+      "<div class='detail-close-button'><button class='close-button' onclick='showResult()'>close</button></div></div>";
+
+    $("#result-div").append(detailHtml);
+  }
+
+  function showResult() {
+    $("#result-table-div").remove();
+    $("#page-button-div").remove();
+    $("#detail-div").remove();
+    $("#popular-table-div").remove();
+    $("#history-table-div").remove();
+    $("#result-div").append(resultHtml);
+  }
+
+  function openHistory() {
+    $("#result-table-div").remove();
+    $("#page-button-div").remove();
+    $("#detail-div").remove();
+    $("#popular-table-div").remove();
+    $("#history-table-div").remove();
+
+    historyHtml = "";
+
+    $.ajax({
+      url: "/api/book/history",
+      type: "GET",
+      success: function (data) {
+        if(data.success === true) {
+          var historyies = data.data;
+
+          historyHtml += "<div class='history-table-div' id='history-table-div'><table class=\"table table-bordered\" id=\"book-search-result\">" +
+            "<thead>" +
+            "<tr>" +
+            "<th>순위</th>" +
+            "<th>검색어</th>" +
+            "<th>검색 날짜</th>" +
+            "</tr>" +
+            "</thead>";
+
+          var index = 1;
+
+          historyies.forEach(function (history) {
+            historyHtml += "<tr><td>"+index.toString()+"</td><td>"+history.keyword+"</td><td>"+history.searchDate+"</td></tr>"
+
+            index ++;
+          });
+
+          historyHtml += "</table><div class='detail-close-button'><button class='close-button' onclick='showResult()'>close</button></div></div></div>"
+
+          $("#result-div").append(historyHtml);
+        } else {
+          alert(data.message);
+        }
+      },
+      error: function (jqXHR) {
+        alert("검색 기록을 불러올 수 없습니다 : " + jqHR.status + jqXHR.message);
+      }
+    });
+  }
+
+  function openPopular() {
+
+    $("#result-table-div").remove();
+    $("#page-button-div").remove();
+    $("#detail-div").remove();
+    $("#popular-table-div").remove();
+    $("#history-table-div").remove();
+
+    popularKeywordHtml = "";
+
+    $.ajax({
+      url: "/api/book/popular-keywords",
+      type: "GET",
+      success: function (data) {
+        if(data.success === true) {
+          var popularKeywords = data.data;
+
+          popularKeywordHtml += "<div class='popular-table-div' id='popular-table-div'><table class=\"table table-bordered\" id=\"book-search-result\">" +
+            "<thead>" +
+            "<tr>" +
+            "<th>순위</th>" +
+            "<th>검색어</th>" +
+            "</tr>" +
+            "</thead>";
+
+          var index = 1;
+
+          popularKeywords.forEach(function (popularKeyword) {
+            popularKeywordHtml += "<tr><td>"+index.toString()+"</td><td>"+popularKeyword.keyword+"</td></tr>"
+
+            index ++;
+          });
+
+          popularKeywordHtml += "</table><div class='detail-close-button'><button class='close-button' onclick='showResult()'>close</button></div></div></div>"
+
+          $("#result-div").append(popularKeywordHtml);
+        } else {
+          alert(data.message);
+        }
+      },
+      error: function (jqXHR) {
+        alert("인기 검색어를 불러올 수 없습니다 : " + jqHR.status + jqXHR.message);
+      }
+    });
+
+  }
+
   function searchBook(page) {
 
     $("#result-table-div").remove();
     $("#page-button-div").remove();
+    $("#detail-div").remove();
+    $("#popular-table-div").remove();
+    $("#history-table-div").remove();
 
     $.ajax({
       url: "/api/book/search",
@@ -124,7 +310,7 @@
         if (data.success === false) {
           alert(data.message)
         } else {
-          if (data.data.result.size !== 0) {
+          if (data.data.result.length !== 0) {
             var searchResult = data.data;
 
             resultHtml =
@@ -140,13 +326,18 @@
               "</thead>";
             resultHtml += "<tbody>"
 
-            searchResult.result.forEach(function (element) {
+            var index = 0;
+            elements = searchResult.result;
+            elements.forEach(function (element) {
+
               resultHtml += "<tr>";
               resultHtml += "<td><span>" + element.title + "</span></td>";
               resultHtml += "<td><span>" + element.publisher + "</span></td>";
               resultHtml += "<td><span>" + element.authors + "</span></td>";
               resultHtml += "<td><span>" + element.price + "</span></td>";
-              resultHtml += "<td><button onclick='openDetails("+element+")'>상세보기</button></td>"
+              resultHtml += "<td><button class='detail-button' onclick='openDetails(" + index + ")'>상세보기</button></td>"
+
+              index++;
             });
             resultHtml += "</tbody></table></div>";
 
@@ -172,6 +363,9 @@
             resultHtml += "</div>"
 
             $("#result-div").append(resultHtml);
+          } else {
+            resultHtml = "";
+            $("#result-div").append(resultHtml);
           }
         }
       },
@@ -179,10 +373,6 @@
         alert("검색 오류 : " + jqXHR.status + jqXHR.statusText);
       }
     });
-  }
-
-  function openDetails(element) {
-    $.ajax()
   }
 </script>
 </body>

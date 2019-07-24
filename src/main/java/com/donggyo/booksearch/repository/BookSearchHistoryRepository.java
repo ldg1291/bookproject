@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface BookSearchHistoryRepository extends JpaRepository<BookSearchHistory, Long> {
 
-	List<BookSearchHistory> findTop10ByUserIdOrderBySearchDateDesc(String userId);
+	List<BookSearchHistory> findAllByUserIdOrderBySearchDateDesc(String userId);
 }

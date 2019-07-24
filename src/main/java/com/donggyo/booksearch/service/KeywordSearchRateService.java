@@ -1,5 +1,6 @@
 package com.donggyo.booksearch.service;
 
+import com.donggyo.booksearch.dto.ResponseDto;
 import com.donggyo.booksearch.entity.KeywordSearchRate;
 import com.donggyo.booksearch.repository.KeywordSearchRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class KeywordSearchRateService {
 		}
 	}
 
-	public List<KeywordSearchRate> getTop10MostSearchedKeywords() {
-		return keywordSearchRateRepository.findTop10ByOrderBySearchNumberDesc();
+	public ResponseDto<List<KeywordSearchRate>> getTop10MostSearchedKeywords() {
+		return new ResponseDto(keywordSearchRateRepository.findTop10ByOrderBySearchNumberDesc());
 	}
 }
