@@ -12,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 public class NaverBookSearchResultDto implements Serializable {
 
-	private List<NaverBookInfoDto> documents;
-	private NaverBookInfoMeta meta;
+	private List<NaverBookInfoDto> items;
+	private Long display;
+	private Long start;
+	private Long total;
 }

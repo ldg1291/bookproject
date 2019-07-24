@@ -3,6 +3,8 @@ package com.donggyo.booksearch.adapter;
 import com.donggyo.booksearch.dto.bookinfo.BookSearchResultDto;
 import com.donggyo.booksearch.dto.bookinfo.kakao.BookInfoDto;
 import com.donggyo.booksearch.dto.bookinfo.kakao.BookInfoMeta;
+import com.donggyo.booksearch.dto.bookinfo.naver.NaverBookInfoDto;
+import com.donggyo.booksearch.dto.bookinfo.naver.NaverBookInfoMeta;
 import com.donggyo.booksearch.dto.bookinfo.naver.NaverBookSearchResultDto;
 import com.donggyo.booksearch.enums.SearchCompanyType;
 import com.donggyo.booksearch.enums.SearchType;
@@ -77,12 +79,12 @@ public class BookSearchExternalApiAdapter {
 	}
 
 	private BookSearchResultDto transformFrom(NaverBookSearchResultDto body) {
-		if( CollectionUtils.isEmpty(body.getDocuments()) || body.getMeta()==null) {
+		if( CollectionUtils.isEmpty(body.getItems())) {
 			throw new BookSearchException(NO_SEARCH_RESULT);
 		}
 
-		List<BookInfoDto> list = body.getDocuments().stream().map(BookMetaMapper::transformFrom).collect(Collectors.toList());
-		BookInfoMeta bookInfoMeta = BookMetaMapper.transformFrom(body.getMeta());
+		List<BookInfoDto> list = body.getItems().stream().map(BookMetaMapper::transformFrom).collect(Collectors.toList());
+		BookInfoMeta bookInfoMeta = BookMetaMapper.transformFrom(new NaverBookInfoMeta(body.getDisplay(), body.getStart(), body.getTotal()));
 		return new BookSearchResultDto(list, bookInfoMeta);
 	}
 
