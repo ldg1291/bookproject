@@ -2,42 +2,42 @@ package com.donggyo.booksearch.service
 
 import com.donggyo.booksearch.dto.BookSearchUserRequestDto
 import com.donggyo.booksearch.entity.BookSearchUser
+import com.donggyo.booksearch.exception.UserException
 import com.donggyo.booksearch.repository.BookSearchUserRepository
+import com.donggyo.booksearch.service.validator.UserValidator
 import spock.lang.Specification
 
 import java.time.LocalDateTime
 
 class BookSearchUserServiceTest extends Specification {
 
-	def ALREADY_EXISTS_USER = "이미 존재하는 ID입니다. 다른 아이디를 사용해주세요";
-	def WRONG_LOG_IN_DATA = "잘못된 로그인 정보입니다. 올바른 정보를 입력해주세요";
-
 	BookSearchUserService sut
 	BookSearchUserRepository bookSearchUserRepository
+	UserValidator userValidator
 
 	void setup() {
 		bookSearchUserRepository = Mock(BookSearchUserRepository)
+		userValidator = Mock(UserValidator)
 
-		sut = new BookSearchUserService(bookSearchUserRepository: bookSearchUserRepository)
+		sut = new BookSearchUserService(bookSearchUserRepository: bookSearchUserRepository, userValidator: userValidator)
 	}
 
-	def "create new user fails when the user put existing value for userId"() {
+	def "create new user fails when the validator throws exception "() {
 		given:
-		bookSearchUserRepository.existsByUserId("existing_id") >> true
+		userValidator.validateUser(_) >> {throw new UserException("error")}
 
 		when:
 		def res = sut.createUser(new BookSearchUserRequestDto(userId: "existing_id", password: "password"))
 
 		then:
 		res.success == Boolean.FALSE
-		res.message == ALREADY_EXISTS_USER
+		res.message == "error"
 		res.data == null
 	}
 
-	def "create new user succeed when the user put not existing value for userId"() {
+	def "create new user succeed when the validator not throws exception"() {
 
 		given:
-		bookSearchUserRepository.existsByUserId("not_existing_id") >> false
 		bookSearchUserRepository.save(_) >> new BookSearchUser(userId: "not_existing_id", createdAt: LocalDateTime.now(), modifiedAt: LocalDateTime.now())
 
 		when:
