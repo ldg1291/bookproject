@@ -13,16 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookSearchService {
 	@Autowired
 	private BookSearchExternalApiAdapter bookSearchExternalApiAdapter;
 
+	private static final String NO_SEARCH_RESULT = "No Search Result";
+
 	PagedObjectDto<BookInfoDto> searchBookByQuery(String query, SortType sort, Integer page, Integer size, SearchType target) throws
 		BookSearchException {
 
-		BookSearchResultDto bookSearchResultDto = bookSearchExternalApiAdapter.getBook(query, sort, page, size, target);
+		BookSearchResultDto bookSearchResultDto = Optional.ofNullable(bookSearchExternalApiAdapter.getBook(query, sort, page, size, target)).orElseThrow(() ->new BookSearchException(NO_SEARCH_RESULT));
 
 		BookInfoMeta meta = bookSearchResultDto.getMeta();
 		List<BookInfoDto> bookInfoDtos = bookSearchResultDto.getDocuments();
